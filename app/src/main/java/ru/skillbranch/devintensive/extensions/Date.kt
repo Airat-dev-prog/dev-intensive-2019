@@ -76,32 +76,23 @@ private fun getTimeUnit( value:Long, units:TimeUnits):String{
 }
 
 fun Date.humanizeDiff(date:Date = Date()): String {
-    val seconds : Long = ((this.time - date.time)/1000L)
+    val milliseconds = (this.time - date.time)//1000L*1000L
+    val seconds : Long = milliseconds/1000L
     val minutes : Long = seconds/60L
     val hours : Long = minutes/60L
     val days : Long = hours/24L
 
-    println("$seconds \n$minutes \n$hours \n$days")
-    return when (abs(seconds)) {
-        in 0L..1L -> "только что"
-        in 1L..45L -> if (seconds < 0) "несколько секунд назад" else "через несколько секунд"
-        in 45L..75L -> if (seconds < 0) "минуту назад" else "через минуту"
-        in 75L..45L*60L -> if (seconds < 0) "${getTimeUnit(minutes, TimeUnits.MINUTE)} назад" else "через ${getTimeUnit(minutes, TimeUnits.MINUTE)} "
-        else -> {
-            when(abs(minutes)){
-                in 45L..75L -> if (minutes < 0) "час назад" else "через час"
-                in 75L..22L*60L -> if (minutes < 0) "${getTimeUnit(hours, TimeUnits.HOUR)} назад" else "через ${getTimeUnit(hours, TimeUnits.HOUR)} "
-                else -> {
-                    when(abs(hours)){
-                        in 22L..26L -> if (hours < 0) "день назад" else "через день"
-                        in 26L..360L*24L -> if (hours < 0) "${getTimeUnit(days,TimeUnits.DAY)} назад" else "через ${getTimeUnit(days,TimeUnits.DAY)} "
-                        else -> {
-                            if (abs(days) > 360L) if (days < 0) "более года назад" else "более чем через год" else ""
-                        }
-                    }
-                }
-            }
-        }
+    //println("$seconds с -> $minutes м -> $hours ч -> $days д")
+    return when (abs(milliseconds)) {
+        in 0 * SECOND .. 1L * SECOND -> "только что"
+        in 1L * SECOND .. 45L * SECOND -> if (milliseconds < 0) "несколько секунд назад" else "через несколько секунд"
+        in 45L * SECOND .. 75L * SECOND -> if (milliseconds < 0) "минуту назад" else "через минуту"
+        in 75L * SECOND .. 45L * MINUTE -> if (milliseconds < 0) "${getTimeUnit(milliseconds/MINUTE, TimeUnits.MINUTE)} назад" else "через ${getTimeUnit(milliseconds/MINUTE, TimeUnits.MINUTE)}"
+        in 45L * MINUTE .. 75L * MINUTE -> if (milliseconds < 0) "час назад" else "через час"
+        in 75L * MINUTE .. 22L * HOUR -> if (milliseconds < 0) "${getTimeUnit(milliseconds/HOUR, TimeUnits.HOUR)} назад" else "через ${getTimeUnit(milliseconds/HOUR, TimeUnits.HOUR)}"
+        in 22L * HOUR .. 26L * HOUR -> if (milliseconds < 0) "день назад" else "через день"
+        in 26L * HOUR .. 360L * DAY -> if (milliseconds < 0) "${getTimeUnit(milliseconds/DAY,TimeUnits.DAY)} назад" else "через ${getTimeUnit(milliseconds/DAY,TimeUnits.DAY)}"
+        else -> {if (milliseconds < 0) "более года назад" else "более чем через год"}
     }
 }
 
