@@ -2,18 +2,19 @@ package ru.skillbranch.devintensive
 
 import android.graphics.Color
 import android.graphics.PorterDuff
-import android.media.Image
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
+import ru.skillbranch.devintensive.extensions.hideKeyboard
 import ru.skillbranch.devintensive.models.Bender
 
-class MainActivity : AppCompatActivity(), View.OnClickListener {
+class MainActivity : AppCompatActivity(), View.OnClickListener, TextView.OnEditorActionListener {
     lateinit var benderImage: ImageView
     lateinit var textTxt: TextView
     lateinit var messageEt: EditText
@@ -84,6 +85,15 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         outState?.putString("QUESTION", benderObj.question.name)
         outState?.putString("MESSAGE", messageEt.text.toString())
         Log.d("M_MainActivity","onSaveInstanceState ${benderObj.status.name}  ${benderObj.question.name}  ${et_message.text.toString()}")
+    }
+
+    override fun onEditorAction(v:TextView , actionId:Int, event: KeyEvent):Boolean {
+        if(v?.id == R.id.et_message){
+            this.hideKeyboard()
+            onClick(iv_send)
+            return true
+        }
+        return false
     }
 
     override fun onClick(v: View?) {
