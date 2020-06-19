@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TextView.OnEdito
 
         textTxt.text = benderObj.askQuestion()
         sendBtn.setOnClickListener (this)
-
+        messageEt.setOnEditorActionListener(this)
     }
 
     override fun onRestart() {
@@ -79,6 +79,16 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TextView.OnEdito
         Log.d("M_MainActivity","onDestroy")
     }
 
+    override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
+        return if(v?.id == R.id.et_message){
+            this.hideKeyboard()
+            onClick(iv_send)
+            true
+        }else {
+            false
+        }
+    }
+
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
         outState?.putString("STATUS", benderObj.status.name)
@@ -87,18 +97,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TextView.OnEdito
         Log.d("M_MainActivity","onSaveInstanceState ${benderObj.status.name}  ${benderObj.question.name}  ${et_message.text.toString()}")
     }
 
-    override fun onEditorAction(v:TextView , actionId:Int, event: KeyEvent):Boolean {
-        if(v?.id == R.id.et_message){
-            this.hideKeyboard()
-            onClick(iv_send)
-            return true
-        }
-        return false
-    }
-
     override fun onClick(v: View?) {
         if(v?.id == R.id.iv_send){
-            val (phrase, color) = benderObj.listenAnswer(messageEt.text.toString().toLowerCase())
+            val (phrase, color) = benderObj.listenAnswer(messageEt.text.toString())
             messageEt.setText("")
             val(r,g,b) = color
             benderImage.setColorFilter(Color.rgb(r,g,b), PorterDuff.Mode.MULTIPLY)
