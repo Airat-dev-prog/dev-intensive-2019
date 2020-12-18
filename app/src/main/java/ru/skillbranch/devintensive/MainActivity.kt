@@ -22,7 +22,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TextView.OnEdito
 
     lateinit var benderObj: Bender
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
